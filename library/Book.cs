@@ -10,14 +10,14 @@ internal class Book
 {
     public string Title { get; }
     public string Author { get; }
-    public int Published { get; }
+    public int PublishedYear { get; }
     public int Stock { get; set; }
 
     public Book(string title, string author, int published, int stock)
     {
         Title = title;
         Author = author;
-        Published = published;
+        PublishedYear = published;
         Stock = stock;
     }
 
@@ -52,30 +52,9 @@ internal class Book
         return books.Where(b => b.Author.Equals(key, StringComparison.InvariantCultureIgnoreCase));
     }
 
-    public int BinarySearchReleaseDate(string key, List<Book> books)
+    public IEnumerable<Book> SearchReleaseDate(string key, List<Book> books)
     {
-        int first = 0;
-        int last = books.Count - 1;
-
-        while (first <= last)
-        {
-            int middle = (first + last) / 2;
-
-            if (key.CompareTo(books[middle].Published) > 0)
-            {
-                first = middle + 1;
-            }
-            else if (key.CompareTo(books[middle].Published) < 0)
-            {
-                last = middle - 1;
-            }
-            else
-            {
-                return middle;
-            }
-        }
-        Console.WriteLine("Couldn't find what you were searching for");
-        return -1;
+        return books.Where(b => b.PublishedYear.ToString().Equals(key));
     }
 
     // Partial matching, multiple results
@@ -126,7 +105,7 @@ internal class Book
             {
                 int min = i;
 
-                if (books[j].Published > books[min].Published)
+                if (books[j].PublishedYear > books[min].PublishedYear)
                 {
                     min = j;
                 }
@@ -168,7 +147,7 @@ internal class Book
     {
         foreach (Book book in books)
         {
-            Console.Write($"\n\tTitle: '{book.Title}' Author: {book.Author} Published: {book.Published}");
+            Console.Write($"\n\tTitle: '{book.Title}' Author: {book.Author} Published: {book.PublishedYear}");
         }
     }
 

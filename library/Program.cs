@@ -66,7 +66,7 @@ while (on)
                     IEnumerable<Book> matchesTitle = book.SearchTitle(title, books);
                     foreach (Book booktitles in matchesTitle)
                     {
-                        Console.WriteLine($"Found the following book: {booktitles.Title} by {booktitles.Author} released in {booktitles.Published}");
+                        Console.WriteLine($"Found the following book: {booktitles.Title} by {booktitles.Author} released in {booktitles.PublishedYear}");
                     }
                     break;
                 case "2":
@@ -75,18 +75,16 @@ while (on)
                     IEnumerable<Book> matchesAuthor = book.SearchAuthor(author, books);
                     foreach (Book bookauthors in matchesAuthor)
                     {
-                        Console.WriteLine($"Found the following book: {bookauthors.Title} by {bookauthors.Author} released in {bookauthors.Published}");
+                        Console.WriteLine($"Found the following book: {bookauthors.Title} by {bookauthors.Author} released in {bookauthors.PublishedYear}");
                     }
                     break;
                 case "3":
                     Console.WriteLine("Please enter in which year the book was published");
-                    book.OrderByReleaseDate(books);
                     string releaseDate = Console.ReadLine();
-                    book.OrderByReleaseDate(books);
-                    int indexReleaseDate = book.BinarySearchReleaseDate(releaseDate, books);
-                    if (indexReleaseDate != -1)
+                    IEnumerable<Book> matchesReleaseDate = book.SearchReleaseDate(releaseDate, books);
+                    foreach (Book bookReleaseDates in matchesReleaseDate)
                     {
-                        Console.WriteLine($"Found the following book: {books[indexReleaseDate].Title} by {books[indexReleaseDate].Author} released in {books[indexReleaseDate].Published}");
+                        Console.WriteLine($"Found the following book: {bookReleaseDates.Title} by {bookReleaseDates.Author} released in {bookReleaseDates.PublishedYear}");
                     }
                     break;
                 default:
