@@ -64,17 +64,17 @@ while (on)
                     Console.WriteLine("Please enter the title of the book: ");
                     string title = Console.ReadLine();
                     book.OrderByTitle(books);
-                    int indexTitle = book.BinarySearchTitle(title, books);
-                    if (indexTitle != -1)
+                    IEnumerable<Book> matches = book.SearchTitle(title, books);
+                    foreach (Book booktitles in matches)
                     {
-                        Console.WriteLine($"Found the following book: {books[indexTitle].Title} by {books[indexTitle].Author} released in {books[indexTitle].Published}");
+                        Console.WriteLine($"Found the following book: {booktitles.Title} by {booktitles.Author} released in {booktitles.Published}");
                     }
                     break;
                 case "2":
                     Console.WriteLine("Please enter the author of the book: ");
                     string author = Console.ReadLine();
                     book.OrderByAuthor(books);
-                    int indexAuthor = book.BinarySearchTitle(author, books);
+                    int indexAuthor = book.BinarySearchAuthor(author, books);
                     if (indexAuthor != -1)
                     {
                         Console.WriteLine($"Found the following book: {books[indexAuthor].Title} by {books[indexAuthor].Author} released in {books[indexAuthor].Published}");
@@ -101,8 +101,8 @@ while (on)
             Console.Write("Please enter the title of the book you want to borrow: ");
             string borrow = Console.ReadLine();
             book.OrderByTitle(books);
-            int index = book.BinarySearchTitle(borrow, books);
-            if (book.BookInStock(books, index) == true)
+            IEnumerable<Book> matchingTitles = book.SearchTitle(borrow, books);
+            /* if (book.BookInStock(books, index) == true)
             {
                 person.BorrowBook(borrow, books, user);
             }
@@ -110,7 +110,7 @@ while (on)
             {
                 Console.WriteLine("The book is out of stock...");
                 book.BackInStock(books[index].Title, people, user);
-            }
+            } */
             break;
 
         case "4":

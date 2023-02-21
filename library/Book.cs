@@ -99,32 +99,12 @@ internal class Book
         return -1;
     }
 
-    // Partial matching, case insensitivity, multiple results
+    // Partial matching, multiple results
+    // Abandon the binary search for now, return a list of books that match the title 
     // Class that manages the searches of books etc. 
-    public int BinarySearchTitle(string key, List<Book> books)
+    public IEnumerable<Book> SearchTitle(string key, List<Book> books)
     {
-        int first = 0;
-        int last = books.Count - 1;
-
-        while (first <= last)
-        {
-            int middle = (first + last) / 2;
-
-            if (string.Compare(key, books[middle].Title, true) > 0)
-            {
-                first = middle + 1;
-            }
-            else if (string.Compare(key, books[middle].Title, true) < 0)
-            {
-                last = middle - 1;
-            }
-            else
-            {
-                return middle;
-            }
-        }
-        Console.WriteLine("Couldn't find what you were searching for");
-        return -1;
+        return books.Where(b => b.Title.Equals(key, StringComparison.InvariantCultureIgnoreCase));
     }
 
     public bool BookInStock(List<Book> books, int key)
