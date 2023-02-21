@@ -63,9 +63,8 @@ while (on)
                 case "1":
                     Console.WriteLine("Please enter the title of the book: ");
                     string title = Console.ReadLine();
-                    book.OrderByTitle(books);
-                    IEnumerable<Book> matches = book.SearchTitle(title, books);
-                    foreach (Book booktitles in matches)
+                    IEnumerable<Book> matchesTitle = book.SearchTitle(title, books);
+                    foreach (Book booktitles in matchesTitle)
                     {
                         Console.WriteLine($"Found the following book: {booktitles.Title} by {booktitles.Author} released in {booktitles.Published}");
                     }
@@ -73,11 +72,10 @@ while (on)
                 case "2":
                     Console.WriteLine("Please enter the author of the book: ");
                     string author = Console.ReadLine();
-                    book.OrderByAuthor(books);
-                    int indexAuthor = book.BinarySearchAuthor(author, books);
-                    if (indexAuthor != -1)
+                    IEnumerable<Book> matchesAuthor = book.SearchAuthor(author, books);
+                    foreach (Book bookauthors in matchesAuthor)
                     {
-                        Console.WriteLine($"Found the following book: {books[indexAuthor].Title} by {books[indexAuthor].Author} released in {books[indexAuthor].Published}");
+                        Console.WriteLine($"Found the following book: {bookauthors.Title} by {bookauthors.Author} released in {bookauthors.Published}");
                     }
                     break;
                 case "3":

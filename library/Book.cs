@@ -47,30 +47,9 @@ internal class Book
         Console.WriteLine($"One copy of the book will be back on {fastest}....");
     }
 
-    public int BinarySearchAuthor(string key, List<Book> books)
+    public IEnumerable<Book> SearchAuthor(string key, List<Book> books)
     {
-        int first = 0;
-        int last = books.Count - 1;
-
-        while (first <= last)
-        {
-            int middle = (first + last) / 2;
-
-            if (key.CompareTo(books[middle].Author) > 0)
-            {
-                first = middle + 1;
-            }
-            else if (key.CompareTo(books[middle].Author) < 0)
-            {
-                last = middle - 1;
-            }
-            else
-            {
-                return middle;
-            }
-        }
-        Console.WriteLine("Couldn't find what you were searching for");
-        return -1;
+        return books.Where(b => b.Author.Equals(key, StringComparison.InvariantCultureIgnoreCase));
     }
 
     public int BinarySearchReleaseDate(string key, List<Book> books)
