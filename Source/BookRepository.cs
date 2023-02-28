@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace library
 {
-    internal class BookRepository
+    public class BookRepository
     {
         public List<Book> books = new List<Book>();
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace library;
 
-internal class People
+public class People
 {
     public string FirstName { get; }
     public string LastName { get; }
