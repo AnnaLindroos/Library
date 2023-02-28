@@ -2,19 +2,17 @@
 using System.Reflection.Metadata;
 using System.Xml.Serialization;
 
-Book book = new Book("The Hunger Games", "Suzanne Collins", 2008, 2);
-
 People person = new People("Anna", "Lindroos", null);
-
-List<Book> books = new List<Book>();
 
 List<People> people = new List<People>();
 
-books.Add(book);
-books.Add(new Book("The Boy in the Striped Pyjamas", "John Boyne", 2006, 1));
-books.Add(new Book("The Fellowship of the Ring", "J.R.R. Tolkien", 1954, 3));
-books.Add(new Book(" Know Why the Caged Bird Sings", "Maya Angelou", 1969, 1));
-books.Add(new Book("East of Eden", "John Steinbeck", 1952, 1));
+BookRepository bookRepository = new BookRepository();
+
+bookRepository.AddBook("The Boy in the Striped Pyjamas", "John Boyne", 2006, 1);
+bookRepository.AddBook("The Fellowship of the Ring", "J.R.R. Tolkien", 1954, 3);
+bookRepository.AddBook(" Know Why the Caged Bird Sings", "Maya Angelou", 1969, 1);
+bookRepository.AddBook("East of Eden", "John Steinbeck", 1952, 1);
+bookRepository.AddBook("The Hunger Games", "Suzanne Collins", 2008, 2);
 
 Console.WriteLine("Welcome to the library! Please register an account:");
 Console.Write("Please enter your first name: ");
@@ -53,51 +51,77 @@ while (on)
     switch (choice)
     {
         case "1":
-            book.PrintBooks(books);
+            bookRepository.PrintBooks();
             break;
 
         case "2":
-            string selectedSearch = book.SearchBy(books);
+            string selectedSearch = ConsoleHelper.SearchBy();
             switch (selectedSearch)
             {
                 case "1":
+                    // FÖRSÖK HITTA ETT SÄTT ATT TA REDA PÅ OM MATCHESTITLE ÄR TOM ELLER INTE,
+                    // ISNULLOREMPTY? ELLER == NULL? (FÖRMODLIGEN INTE; VID DEBUG ÄR DEN INTE NULL MEN DEN HAR INGA VÄRDEN)
                     Console.WriteLine("Please enter the title of the book: ");
                     string title = Console.ReadLine();
-                    IEnumerable<Book> matchesTitle = book.SearchTitle(title, books);
-                    foreach (Book booktitles in matchesTitle)
+                    IEnumerable<Book> matchesTitle = bookRepository.SearchTitle(title);
+                    if (!matchesTitle.Any())
                     {
-                        Console.WriteLine($"Found the following book: {booktitles.Title} by {booktitles.Author} released in {booktitles.PublishedYear}");
+                        Console.WriteLine("Sorry, couldn't find what you were searching for");
+                        break;
+                    }
+                    else
+                    { 
+                        foreach (Book booktitles in matchesTitle)
+                        {
+                            Console.WriteLine($"Found the following book: {booktitles.Title} by {booktitles.Author} released in {booktitles.PublishedYear}");
+                        }
                     }
                     break;
                 case "2":
                     Console.WriteLine("Please enter the author of the book: ");
                     string author = Console.ReadLine();
-                    IEnumerable<Book> matchesAuthor = book.SearchAuthor(author, books);
-                    foreach (Book bookauthors in matchesAuthor)
+                    IEnumerable<Book> matchesAuthor = bookRepository.SearchAuthor(author);
+                    if (!matchesAuthor.Any())
                     {
-                        Console.WriteLine($"Found the following book: {bookauthors.Title} by {bookauthors.Author} released in {bookauthors.PublishedYear}");
+                        Console.WriteLine("Sorry, couldn't find what you were searching for");
+                        break;
+                    }
+                    else
+                    {
+                        foreach (Book bookauthors in matchesAuthor)
+                        {
+                            Console.WriteLine($"Found the following book: {bookauthors.Title} by {bookauthors.Author} released in {bookauthors.PublishedYear}");
+                        }
                     }
                     break;
                 case "3":
                     Console.WriteLine("Please enter in which year the book was published");
-                    string releaseDate = Console.ReadLine();
-                    IEnumerable<Book> matchesReleaseDate = book.SearchReleaseDate(releaseDate, books);
-                    foreach (Book bookReleaseDates in matchesReleaseDate)
+                    int.TryParse(Console.ReadLine(), out int releaseDate);
+                    IEnumerable<Book> matchesReleaseDate = bookRepository.SearchReleaseDate(releaseDate);
+                    if (!matchesReleaseDate.Any())
                     {
-                        Console.WriteLine($"Found the following book: {bookReleaseDates.Title} by {bookReleaseDates.Author} released in {bookReleaseDates.PublishedYear}");
+                        Console.WriteLine("Sorry, couldn't find what you were searching for");
+                        break;
+                    }
+                    else
+                    {
+                        foreach (Book bookReleaseDates in matchesReleaseDate)
+                        {
+                            Console.WriteLine($"Found the following book: {bookReleaseDates.Title} by {bookReleaseDates.Author} released in {bookReleaseDates.PublishedYear}");
+                        }
                     }
                     break;
                 default:
                     Console.WriteLine("Please select a number between 1 and 3");
                     break;
             }
+            Console.ReadLine();
             break;
 
         case "3":
             Console.Write("Please enter the title of the book you want to borrow: ");
             string borrow = Console.ReadLine();
-            book.OrderByTitle(books);
-            IEnumerable<Book> matchingTitles = book.SearchTitle(borrow, books);
+            IEnumerable<Book> matchingTitles = bookRepository.SearchTitle(borrow);
             /* if (book.BookInStock(books, index) == true)
             {
                 person.BorrowBook(borrow, books, user);
@@ -112,7 +136,7 @@ while (on)
         case "4":
             Console.Write("Please enter the title of the book you want to return: ");
             string leave = Console.ReadLine();
-            person.ReturnBook(leave, books, user);
+            person.ReturnBook(leave, bookRepository.books, user);
             break;
 
         case "5":
