@@ -25,6 +25,8 @@ namespace Tests
             // OPTION 3: Assert.That(bookrepository.books.Count, Is.EqualTo(1));
         }
 
+        // Write some tests around search for title, split into different tests:  
+
         [Test]
         public void SearchTitleNoBooks()
         {
@@ -45,7 +47,7 @@ namespace Tests
             bookRepository.AddBook("The Fellowship of the Ring", "J.R.R. Tolkien", 1954, 3);
 
             // IEnumerable<Book> booksBack = bookRepository.SearchTitle("fellow");
-            IEnumerable<Book> booksBack = bookRepository.SearchTitle("fellow");
+            IEnumerable<Book> booksBack = bookRepository.SearchTitle("Fellow");
 
             foreach (Book book in booksBack)
             {
@@ -53,10 +55,24 @@ namespace Tests
                 Assert.AreEqual("The Fellowship of the Ring", book.Title);
             }
         }
+
+        // Test 3: case insensitivíty, verifying that the method is case insentive. 
+        [Test]
+        public void SearchTitleCaseInsensitivity()
+        {
+            BookRepository bookRepository = new BookRepository();
+
+            bookRepository.AddBook("The Fellowship of the Ring", "J.R.R. Tolkien", 1954, 3);
+
+            IEnumerable<Book> booksBack = bookRepository.SearchTitle("fellow");
+
+            foreach (Book book in booksBack)
+            {
+                Assert.AreEqual("The Fellowship of the Ring", book.Title);
+            }
+        }
     }
 
-    // Write some tests around search for title, split into different tests:   
-    // Test 3: case insensitivoty, verifying that the method is case ionsentive. 
     // Test 4: whem there are multiple books and i search for a title, (for ex ring and 3 books have that word in it) i get a collection with however many those books are (with the RIGHT books in it)
     // MAKE AT LEAST ONE COMMIT WHILE DOING THESE
 }
