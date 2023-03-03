@@ -49,9 +49,10 @@ namespace Tests
             // IEnumerable<Book> booksBack = bookRepository.SearchTitle("fellow");
             IEnumerable<Book> booksBack = bookRepository.SearchTitle("Fellow");
 
+            Assert.AreEqual(1, booksBack.Count());
+
             foreach (Book book in booksBack)
             {
-                Assert.AreEqual(1, booksBack.Count());
                 Assert.AreEqual("The Fellowship of the Ring", book.Title);
             }
         }
@@ -71,8 +72,34 @@ namespace Tests
                 Assert.AreEqual("The Fellowship of the Ring", book.Title);
             }
         }
+
+        // Test 4: when there are multiple books and i search for a title, (for ex ring and 3 books have that word in it)
+        // i get a collection with however many those books are (with the RIGHT books in it)
+
+        [Test]
+        public void SearchTitleMultipleBooks()
+        {
+            BookRepository bookRepository = new BookRepository();
+
+            bookRepository.AddBook("shirt", "Meg", 2023, 1);
+            bookRepository.AddBook("i own a shirt", "Bob", 2022, 1);
+            bookRepository.AddBook("wow cool shirt dude", "Dave", 2020, 1);
+            bookRepository.AddBook("look at my sweater", "Kyle", 2021, 1);
+
+            IEnumerable<Book> booksBack = bookRepository.SearchTitle("shirt");
+
+            Assert.AreEqual(3, booksBack.Count());
+
+            int i = 0;
+
+            foreach (Book book in booksBack)
+            {
+                Assert.AreEqual(bookRepository.books[i].Title, book.Title);
+                i++;
+            }
+        }
     }
 
-    // Test 4: whem there are multiple books and i search for a title, (for ex ring and 3 books have that word in it) i get a collection with however many those books are (with the RIGHT books in it)
-    // MAKE AT LEAST ONE COMMIT WHILE DOING THESE
+
+
 }
