@@ -45,6 +45,7 @@ namespace Tests
             BookRepository bookRepository = new BookRepository();
 
             bookRepository.AddBook("The Fellowship of the Ring", "J.R.R. Tolkien", 1954, 3);
+            bookRepository.AddBook("bajs", "hej", 2015, 2);
 
             // IEnumerable<Book> booksBack = bookRepository.SearchTitle("fellow");
             IEnumerable<Book> booksBack = bookRepository.SearchTitle("Fellow");
