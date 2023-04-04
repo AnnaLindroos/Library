@@ -33,7 +33,9 @@ namespace Tests
             // Test 1: When i call searchbytitle and there are no books, i should get an empty collection (IEnumaerable) back
             BookRepository bookRepository = new BookRepository();
 
-            IEnumerable<Book> booksBack = bookRepository.SearchTitle("xzpsp");
+            bookRepository.AddBook("bajs", "hej", 2015, 2);
+
+            IEnumerable<Book> booksBack = bookRepository.SearchByTitle("xzpsp");
 
             Assert.Zero(booksBack.Count());
         }
@@ -48,7 +50,7 @@ namespace Tests
             bookRepository.AddBook("bajs", "hej", 2015, 2);
 
             // IEnumerable<Book> booksBack = bookRepository.SearchTitle("fellow");
-            IEnumerable<Book> booksBack = bookRepository.SearchTitle("Fellow");
+            IEnumerable<Book> booksBack = bookRepository.SearchByTitle("Fellow");
 
             Assert.AreEqual(1, booksBack.Count());
 
@@ -66,7 +68,7 @@ namespace Tests
 
             bookRepository.AddBook("The Fellowship of the Ring", "J.R.R. Tolkien", 1954, 3);
 
-            IEnumerable<Book> booksBack = bookRepository.SearchTitle("fellow");
+            IEnumerable<Book> booksBack = bookRepository.SearchByTitle("fellow");
 
             foreach (Book book in booksBack)
             {
@@ -82,22 +84,18 @@ namespace Tests
         {
             BookRepository bookRepository = new BookRepository();
 
-            bookRepository.AddBook("shirt", "Meg", 2023, 1);
+            Book book = new Book("Shirt", "Meg", 2023, 1);
+
+            bookRepository.AddBook(book);
             bookRepository.AddBook("i own a shirt", "Bob", 2022, 1);
             bookRepository.AddBook("wow cool shirt dude", "Dave", 2020, 1);
             bookRepository.AddBook("look at my sweater", "Kyle", 2021, 1);
 
-            IEnumerable<Book> booksBack = bookRepository.SearchTitle("shirt");
+            Book[] booksBack = bookRepository.SearchByTitle("shirt").ToArray();
 
-            Assert.AreEqual(3, booksBack.Count());
+            Assert.AreEqual(3, booksBack.Length);
 
-            int i = 0;
-
-            foreach (Book book in booksBack)
-            {
-                Assert.AreEqual(bookRepository.books[i].Title, book.Title);
-                i++;
-            }
+            Assert.AreEqual(book, booksBack[0]);
         }
     }
 

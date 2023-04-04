@@ -8,14 +8,14 @@ namespace library
 {
     public class Loan
     {
-        public string TitleOfBook { get; set; }
+        public Book Book { get; set; }
 
-        public DateTime LengthOfLoan { get; set; }
-        
-        public Loan (string titleOfBook, DateTime lengthOfLoan)
+        public DateTime DueDate { get; set; }
+
+        public Loan (Book book, DateTime dueDate)
         {
-            TitleOfBook = titleOfBook;
-            LengthOfLoan = lengthOfLoan;
+            Book = book;
+            DueDate = dueDate;
         }
     }
 }

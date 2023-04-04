@@ -10,7 +10,7 @@ public class People
 {
     public string FirstName { get; }
     public string LastName { get; }
-    public List<Loan>? BorrowedBooks { get; private set; }
+    public List<Loan> BorrowedBooks { get; private set; }
 
     public People(string firstName, string lastName, List<Loan> borrowedBooks)
     {
@@ -19,51 +19,29 @@ public class People
         BorrowedBooks = borrowedBooks;
     }
 
-    public bool BorrowBook(string bookTitle, List<Book> books, People user)
+    public void BorrowBook(Book book)
     {
-        foreach (Book book in books)
-        {
-            if (bookTitle.Equals(book.Title, StringComparison.InvariantCultureIgnoreCase))
-            {
-                Loan loan = new Loan(book.Title, DateTime.Now.AddDays(30));
-                user.BorrowedBooks.Add(loan);
-                book.Stock--;
-                return true;
-            }
-        }
-        Console.WriteLine("Couldn't find the book you were searching for");
-        return false;
+        Loan loan = new Loan(book, DateTime.Now.AddDays(30));
+        BorrowedBooks.Add(loan);
     }
 
-    public void ReturnBook(string bookTitle, List<Book> books, People user)
+    public string TitleBorrowBook()
     {
-        foreach (Loan loanedBook in user.BorrowedBooks)
-        {
-            if (bookTitle.Equals(loanedBook.TitleOfBook, StringComparison.InvariantCultureIgnoreCase))
-            {
-                user.BorrowedBooks.Remove(loanedBook);
-
-                foreach (Book book in books)
-                {
-                    if (bookTitle.Equals(book.Title, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        book.Stock++;
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine("Please re-enter the title of the book");
-            }
-        }
+        Console.Write("Please enter the title of the book you want to borrow: ");
+        return Console.ReadLine();
     }
 
-    public bool CheckUser(People user, List<People> people)
+    public void ReturnBook(Loan loan)
+    {
+        BorrowedBooks.Remove(loan);
+    }
+
+    public bool CheckUser(List<People> people)
     {
         foreach (People person in people)
         {
-            if (person.FirstName.Equals(user.FirstName, StringComparison.InvariantCultureIgnoreCase) &&
-                person.LastName.Equals(user.LastName, StringComparison.InvariantCultureIgnoreCase))
+            if (person.FirstName.Equals(FirstName, StringComparison.InvariantCultureIgnoreCase) &&
+                person.LastName.Equals(LastName, StringComparison.InvariantCultureIgnoreCase))
             {
                 return true;
             }
@@ -71,13 +49,26 @@ public class People
         return false;
     }
 
-    public bool RegisterUser(string firstName, string lastName)
+    public People ? WelcomeUser()
     {
+        Console.Write("Please enter your first name: ");
+        string firstName = Console.ReadLine();
+        Console.Write("Please enter your last name: ");
+        string lastName = Console.ReadLine();
+
         if (firstName != "" && lastName != "")
         {
-            return true;
+            return new People(firstName, lastName, new List<Loan>()); ;
         }
-        return false;
+        return null;
+    }
+
+    public void PrintOutBorrowedBooks()
+    {
+        for (int i = 0; i < BorrowedBooks.Count; i++)
+        {
+            Console.WriteLine($"[{i + 1}]: {BorrowedBooks[i].Book.Title}");
+        }
     }
 }
 

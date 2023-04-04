@@ -21,30 +21,38 @@ public class Book
         Stock = stock;
     }
 
-    public void BackInStock(string booktitle, List<People> people, People user)
+    public bool BookInStock()
+    {
+        if (Stock > 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void BackInStock(List<People> people)
     {
         List<Loan> rentedCopies = new List<Loan>();
 
         foreach (People person in people)
         {
-            foreach (Loan book in person.BorrowedBooks)
+            foreach (Loan loan in person.BorrowedBooks)
             {
-                if (booktitle.Equals(book.TitleOfBook, StringComparison.InvariantCultureIgnoreCase))
+                if (Title.Equals(loan.Book.Title, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    rentedCopies.Add(book);
+                    rentedCopies.Add(loan);
                 }
             }
         }
         int fastest = 0;
         for (int i = 1; i < rentedCopies.Count; i++)
         {
-            if (rentedCopies[fastest].LengthOfLoan.CompareTo(rentedCopies[i].LengthOfLoan) < 0)
+            if (rentedCopies[fastest].DueDate.CompareTo(rentedCopies[i].DueDate) < 0)
             {
                 fastest = i;
             }
         }
-
-        Console.WriteLine($"One copy of the book will be back on {fastest}....");
+        Console.WriteLine($"Sorry, book is out of stock! One copy of the book will be back on {rentedCopies[fastest].DueDate}....");
     }
 
 }

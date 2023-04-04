@@ -2,51 +2,30 @@
 using System.Reflection.Metadata;
 using System.Xml.Serialization;
 
-People person = new People("Anna", "Lindroos", null);
-
 List<People> people = new List<People>();
 
 BookRepository bookRepository = new BookRepository();
 
 bookRepository.AddBook("The Boy in the Striped Pyjamas", "John Boyne", 2006, 1);
 bookRepository.AddBook("The Fellowship of the Ring", "J.R.R. Tolkien", 1954, 3);
-bookRepository.AddBook(" Know Why the Caged Bird Sings", "Maya Angelou", 1969, 1);
+bookRepository.AddBook("Know Why the Caged Bird Sings", "Maya Angelou", 1969, 1);
 bookRepository.AddBook("East of Eden", "John Steinbeck", 1952, 1);
 bookRepository.AddBook("The Hunger Games", "Suzanne Collins", 2008, 2);
 
 Console.WriteLine("Welcome to the library! Please register an account:");
-Console.Write("Please enter your first name: ");
-string firstName = Console.ReadLine();
-Console.Write("Please enter your last name: ");
-string lastName = Console.ReadLine();
+People user = ConsoleHelper.WelcomeUser();
 
-while (person.RegisterUser(firstName, lastName) == false)
+while (user == null)
 {
-    Console.WriteLine("Please enter a first and last name");
+    user = ConsoleHelper.WelcomeUser();
 }
 
-People user = new People(firstName, lastName, null);
-
-//if (user.CheckUser(user, people) == false)
-//{
-    people.Add(user);
-//}
-/* else
-{
-    Console.WriteLine("Sorry someone with that name already exists and Anna wants to spend time on other issues atm");
-}  */
+people.Add(user);
 
 bool on = true;
 while (on)
 {
-    Console.Clear();
-    Console.WriteLine("[1] Browse the library");
-    Console.WriteLine("[2] Search for a book");
-    Console.WriteLine("[3] Loan a book");
-    Console.WriteLine("[4] Return a book");
-    Console.WriteLine("[5] View your borrowed books");
-
-    string choice = Console.ReadLine();
+    string choice = ConsoleHelper.PrintMainMenu();
 
     switch (choice)
     {
@@ -55,15 +34,13 @@ while (on)
             break;
 
         case "2":
-            string selectedSearch = ConsoleHelper.SearchBy();
+            string selectedSearch = ConsoleHelper.PrintSearchByMenu();
             switch (selectedSearch)
             {
                 case "1":
-                    // FÖRSÖK HITTA ETT SÄTT ATT TA REDA PÅ OM MATCHESTITLE ÄR TOM ELLER INTE,
-                    // ISNULLOREMPTY? ELLER == NULL? (FÖRMODLIGEN INTE; VID DEBUG ÄR DEN INTE NULL MEN DEN HAR INGA VÄRDEN)
                     Console.WriteLine("Please enter the title of the book: ");
                     string title = Console.ReadLine();
-                    IEnumerable<Book> matchesTitle = bookRepository.SearchTitle(title);
+                    IEnumerable<Book> matchesTitle = bookRepository.SearchByTitle(title);
                     if (!matchesTitle.Any())
                     {
                         Console.WriteLine("Sorry, couldn't find what you were searching for");
@@ -80,7 +57,7 @@ while (on)
                 case "2":
                     Console.WriteLine("Please enter the author of the book: ");
                     string author = Console.ReadLine();
-                    IEnumerable<Book> matchesAuthor = bookRepository.SearchAuthor(author);
+                    IEnumerable<Book> matchesAuthor = bookRepository.SearchByAuthor(author);
                     if (!matchesAuthor.Any())
                     {
                         Console.WriteLine("Sorry, couldn't find what you were searching for");
@@ -97,7 +74,7 @@ while (on)
                 case "3":
                     Console.WriteLine("Please enter in which year the book was published");
                     int.TryParse(Console.ReadLine(), out int releaseDate);
-                    IEnumerable<Book> matchesReleaseDate = bookRepository.SearchReleaseDate(releaseDate);
+                    IEnumerable<Book> matchesReleaseDate = bookRepository.SearchByReleaseDate(releaseDate);
                     if (!matchesReleaseDate.Any())
                     {
                         Console.WriteLine("Sorry, couldn't find what you were searching for");
@@ -111,6 +88,7 @@ while (on)
                         }
                     }
                     break;
+
                 default:
                     Console.WriteLine("Please select a number between 1 and 3");
                     break;
@@ -119,25 +97,41 @@ while (on)
             break;
 
         case "3":
-            Console.Write("Please enter the title of the book you want to borrow: ");
-            string borrow = Console.ReadLine();
-            IEnumerable<Book> matchingTitles = bookRepository.SearchTitle(borrow);
-            /* if (book.BookInStock(books, index) == true)
+            string titleOfBookToBorrow = ConsoleHelper.PromptUserForBookTitleToBorrow();
+            IEnumerable<Book> matchingBookTitles = bookRepository.SearchByTitle(titleOfBookToBorrow);
+
+            while (matchingBookTitles.Count() != 1 )
             {
-                person.BorrowBook(borrow, books, user);
+                titleOfBookToBorrow = ConsoleHelper.PromptUserForBookTitleToBorrow();
+                matchingBookTitles = bookRepository.SearchByTitle(titleOfBookToBorrow);
+            }
+
+            var matchingBook = matchingBookTitles.First();
+
+            if (matchingBook.BookInStock() == true)
+            {
+                user.BorrowBook(matchingBook);
+                Console.WriteLine("Rental succeeded!");
+                bookRepository.CheckOutBookDecreaseStock(matchingBook);
+                break;
             }
             else
             {
-                Console.WriteLine("The book is out of stock...");
-                book.BackInStock(books[index].Title, people, user);
-            } */
-            break;
+                matchingBook.BackInStock(people);
+                break;
+            }
 
         case "4":
-            Console.Write("Please enter the title of the book you want to return: ");
-            string leave = Console.ReadLine();
-            person.ReturnBook(leave, bookRepository.books, user);
+            //////////////////////////////////////////////////////////////////
+            Console.WriteLine("Please select which book to return: ");
+            user.PrintOutBorrowedBooks();
+            int.TryParse(Console.ReadLine(), out int chosenBook);
+            Loan leave = user.BorrowedBooks.ElementAt(chosenBook - 1);
+            user.ReturnBook(leave);
+            bookRepository.ReturnBookIncreaseStock(leave.Book);
+            Console.WriteLine("Thank you, come again");
             break;
+            //////////////////////////////////////////////////////////////////
 
         case "5":
             if (user.BorrowedBooks.Count == 0)
@@ -147,10 +141,7 @@ while (on)
             else
             {
                 Console.WriteLine("Your borrowed books are the following...");
-                foreach (Loan loanedBook in user.BorrowedBooks)
-                {
-                    Console.WriteLine(loanedBook.TitleOfBook);
-                }
+                user.PrintOutBorrowedBooks(); 
             }
             break;
 
