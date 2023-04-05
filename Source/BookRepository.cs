@@ -37,9 +37,9 @@ namespace library
             }
         }
 
-        public void AddBook(string title, string author, int published, int stock)
+        public void AddBook(string title, string author, int published, int stock, int id)
         {
-            books.Add(new Book(title, author, published, stock));
+            books.Add(new Book(title, author, published, stock, id));
         }
 
         public void AddBook(Book book)

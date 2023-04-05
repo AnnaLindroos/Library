@@ -36,13 +36,29 @@ namespace library
             return Console.ReadLine();
         }
 
+        public static string PromptUserForString(string prompt)
+        {
+            Console.WriteLine(prompt);
+            return Console.ReadLine();
+        }
+
+        public static bool PrintOutSearchedBook(IEnumerable<Book> matches)
+        {
+            if (!matches.Any())
+            {
+                Console.WriteLine("Sorry, couldn't find what you were searching for");
+                return false;
+            }
+            foreach (Book book in matches)
+            {
+                Console.WriteLine($"Found the following book: {book.Title} by {book.Author} released in {book.PublishedYear}");
+            }
+            return true;
+        }
         public static People? WelcomeUser()
         {
-            Console.Write("Please enter your first name: ");
-            string firstName = Console.ReadLine();
-            Console.Write("Please enter your last name: ");
-            string lastName = Console.ReadLine();
-
+            string firstName = PromptUserForString("Please enter your first name: ");
+            string lastName = PromptUserForString("Please enter your last name: ");
             if (firstName != "" && lastName != "")
             {
                 return new People(firstName, lastName);

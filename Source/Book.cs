@@ -12,13 +12,15 @@ public class Book
     public string Author { get; }
     public int PublishedYear { get; }
     public int Stock { get; set; }
+    public int Id { get; }
 
-    public Book(string title, string author, int published, int stock)
+    public Book(string title, string author, int published, int stock, int id)
     {
         Title = title;
         Author = author;
         PublishedYear = published;
         Stock = stock;
+        Id = id;
     }
 
     public bool BookInStock()

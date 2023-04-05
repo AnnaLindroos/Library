@@ -18,7 +18,7 @@ namespace Tests
             // Arrange: create classes that are needed for this test (bookrepository in this case)
             BookRepository bookRepository = new BookRepository();
             // Act: Doing the thing that I'm testing - our act in this case is calling the Addbook function
-            bookRepository.AddBook("bajs", "hej", 2015, 2);
+            bookRepository.AddBook("bajs", "hej", 2015, 2, 1);
             // Assert: Verifying thet my expectation is correct - assuring that reality matches what I'm expecting, there are many different ways of doing this
             /* OPTION 1:*/ Assert.AreEqual(1, bookRepository.books.Count);
             // OPTION 2: Assert.That(bookrepository.books, Has.Count.EqualTo(1));
@@ -33,7 +33,7 @@ namespace Tests
             // Test 1: When i call searchbytitle and there are no books, i should get an empty collection (IEnumaerable) back
             BookRepository bookRepository = new BookRepository();
 
-            bookRepository.AddBook("bajs", "hej", 2015, 2);
+            bookRepository.AddBook("bajs", "hej", 2015, 2, 1);
 
             IEnumerable<Book> booksBack = bookRepository.SearchByTitle("xzpsp");
 
@@ -46,8 +46,8 @@ namespace Tests
             // Test 2: when i search for a title and there is a book, i get back a collection with a single book in it (with the RIGHT book in it back!)
             BookRepository bookRepository = new BookRepository();
 
-            bookRepository.AddBook("The Fellowship of the Ring", "J.R.R. Tolkien", 1954, 3);
-            bookRepository.AddBook("bajs", "hej", 2015, 2);
+            bookRepository.AddBook("The Fellowship of the Ring", "J.R.R. Tolkien", 1954, 3, 2);
+            bookRepository.AddBook("bajs", "hej", 2015, 2, 1);
 
             // IEnumerable<Book> booksBack = bookRepository.SearchTitle("fellow");
             IEnumerable<Book> booksBack = bookRepository.SearchByTitle("Fellow");
@@ -66,7 +66,7 @@ namespace Tests
         {
             BookRepository bookRepository = new BookRepository();
 
-            bookRepository.AddBook("The Fellowship of the Ring", "J.R.R. Tolkien", 1954, 3);
+            bookRepository.AddBook("The Fellowship of the Ring", "J.R.R. Tolkien", 1954, 3, 2);
 
             IEnumerable<Book> booksBack = bookRepository.SearchByTitle("fellow");
 
@@ -84,12 +84,12 @@ namespace Tests
         {
             BookRepository bookRepository = new BookRepository();
 
-            Book book = new Book("Shirt", "Meg", 2023, 1);
+            Book book = new Book("Shirt", "Meg", 2023, 1, 1);
 
             bookRepository.AddBook(book);
-            bookRepository.AddBook("i own a shirt", "Bob", 2022, 1);
-            bookRepository.AddBook("wow cool shirt dude", "Dave", 2020, 1);
-            bookRepository.AddBook("look at my sweater", "Kyle", 2021, 1);
+            bookRepository.AddBook("i own a shirt", "Bob", 2022, 1, 2);
+            bookRepository.AddBook("wow cool shirt dude", "Dave", 2020, 1, 3);
+            bookRepository.AddBook("look at my sweater", "Kyle", 2021, 1, 4);
 
             Book[] booksBack = bookRepository.SearchByTitle("shirt").ToArray();
 
